@@ -5,6 +5,7 @@ import * as bodyParser from "body-parser";
 import {Request, Response} from "express";
 import {User} from "./entity/User";
 import * as cors from 'cors'
+import { RouterController } from "./router/index";
 
 createConnection().then(async connection => {
 
@@ -14,6 +15,7 @@ createConnection().then(async connection => {
     app.use(bodyParser.json());
 
     // register express routes from defined application routes
+    new RouterController(app)
     // Routes.forEach(route => {
     //     (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
     //         const result = (new (route.controller as any))[route.action](req, res, next);

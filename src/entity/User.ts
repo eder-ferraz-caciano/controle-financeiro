@@ -1,18 +1,21 @@
 import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 
 @Entity()
-export class User {
+export class User extends HelperColumnsSoftModel {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    firstName: string;
+    nome: string;
 
     @Column()
-    lastName: string;
+    email: string;
 
     @Column()
-    age: number;
+    senha: string;
 
+    @Column()
+    admin: number
 }

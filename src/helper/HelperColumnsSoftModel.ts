@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
 
 export class HelperColumnsSoftModel {
 
@@ -8,13 +8,13 @@ export class HelperColumnsSoftModel {
   @Column({ nullable: true })
   createdBy: string
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: Date
 
   @Column({ nullable: true })
   updatedBy: string
 
-  @CreateDateColumn()
+  @DeleteDateColumn()
   deletedAt: Date
 
   @Column({ nullable: true })
