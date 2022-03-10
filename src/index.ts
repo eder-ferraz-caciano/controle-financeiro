@@ -1,10 +1,10 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-import * as express from "express";
+import express from "express";
 import * as bodyParser from "body-parser";
 import {Request, Response} from "express";
 import {User} from "./entity/User";
-import * as cors from 'cors'
+import cors from 'cors'
 import { RouterController } from "./router/index";
 
 createConnection().then(async connection => {

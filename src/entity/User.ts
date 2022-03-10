@@ -1,21 +1,21 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 
 @Entity()
 export class User extends HelperColumnsSoftModel {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number | undefined
 
     @Column()
-    nome: string;
+    nome: string | undefined
 
     @Column()
-    email: string;
+    email: string | undefined
 
     @Column()
-    senha: string;
+    senha: string | undefined
 
     @Column()
-    admin: number
+    admin: number | undefined
 }

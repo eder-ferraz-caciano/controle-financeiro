@@ -8,10 +8,10 @@ export class HookAutenticacao {
 
       const token = String(req['headers'].authorization).replace('Bearer ', '')
 
-      jwt.verify(token, process.env.APP_KEY)
+      jwt.verify(token, <any>process.env.APP_KEY)
 
       next()
-    } catch (error) {
+    } catch (error: any) {
       return res.status(401).json({ erro: error.message })
     }
   }
