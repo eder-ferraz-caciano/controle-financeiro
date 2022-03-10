@@ -139,6 +139,9 @@ export class UserController {
       const delUsuario = await getRepository(User).softRemove(usuario)
       delUsuario.deletedBy = await getUser(req)
 
+      // deve salvar
+      await getRepository(User).save(delUsuario)
+
       // deve retornar o resultado
       return res.json('Usuário excluído com sucesso!')
     } catch (error) {
