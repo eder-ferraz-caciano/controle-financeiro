@@ -1,15 +1,21 @@
-import { async } from "validate.js"
+// import { Opcao } from '@/entity/Opcao'
+// import { OpcaoItem } from '@/entity/OpcaoItem'
+// import getUser from '@/hook/GetUserToken'
+// import { Opcao } from 'entity/Opcao'
+// import { OpcaoItem } from 'entity/OpcaoItem'
 import { Request, Response } from 'express'
+// import getUser from 'hook/GetUserToken'
 import { getRepository, getTreeRepository } from "typeorm"
-import { OpcaoItem } from "../entity/OpcaoItem"
 import { validate } from 'validate.js'
-import { Opcao } from "../entity/Opcao"
-import getUser from "../hook/GetUserToken"
+import { Opcao } from '../entity/Opcao'
+import { OpcaoItem } from '../entity/OpcaoItem'
+import getUser from '../hook/GetUserToken'
 
 export class OpcaoItemController {
 
   private validarOpcaoItem = {
-    codigo: { presence: true, type: 'string' },
+    codigo: { presence: true, type: 'number' },
+    descricao: { presence: true, type: 'string'},
     opcaoId: { presence: true, type: 'number' }
   }
 
@@ -19,6 +25,7 @@ export class OpcaoItemController {
       let sql = `
                 SELECT opcao_item.id
                      , codigo
+                     , descricao
                      , opcao_item.opcaoId
                      , opcao.descricao as opcaoDescricao
                   FROM opcao_item
@@ -28,13 +35,14 @@ export class OpcaoItemController {
                  WHERE opcao_item.deletedAt is null `
 
       if(req.query.id && Number(req.query.id)) sql += `and opcao_item.id in (${req.query.id})`
-      if(req.query.codigo) sql += `and codigo like '%${req.query.codigo}%'`
+      if(req.query.codigo && Number(req.query.codigo)) sql += `and codigo in (${req.query.codigo})`
+      if(req.query.descricao) sql += `and descricao like '%${req.query.descricao}%'`
       if(req.query.opcaoId && Number(req.query.opcaoId)) sql += `and opcao_item.opcaoId in (${req.query.opcaoId})`
       const lista = await getRepository(OpcaoItem).query(sql)
 
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -52,6 +60,7 @@ export class OpcaoItemController {
       let sql = `
                 SELECT opcao_item.id
                      , codigo
+                     , descricao
                      , opcao_item.opcaoId
                      , opcao.descricao as opcaoDescricao
                   FROM opcao_item
@@ -65,7 +74,7 @@ export class OpcaoItemController {
 
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -79,6 +88,7 @@ export class OpcaoItemController {
       // deve verificar se o item já foi inserido
       const opcaoItem = await getRepository(OpcaoItem).findOne({
         codigo: req.body.codigo,
+        descricao: req.body.descricao,
         opcaoId: req.body.opcaoId,
         deletedAt: null
       })
@@ -94,6 +104,7 @@ export class OpcaoItemController {
       // deve inserir
       const addOpcaoItem = await getRepository(OpcaoItem).create({
         codigo: req.body.codigo,
+        descricao: req.body.descricao,
         opcaoId: req.body.opcaoId,
         createdBy: await getUser(req)
       })
@@ -103,7 +114,7 @@ export class OpcaoItemController {
 
       // deve retornar o resultado
       return res.json('Item inserido com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -131,6 +142,7 @@ export class OpcaoItemController {
       // deve validar se o item já foi inserido
       const unqOpcaoItem = await getRepository(OpcaoItem).findOne({
         codigo: req.body.codigo,
+        descricao: req.body.descricao,
         opcaoId: req.body.opcaoId,
         deletedAt: null
       })

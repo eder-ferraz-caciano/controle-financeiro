@@ -1,5 +1,7 @@
-import express from 'express'
-import { OpcaoController } from "../controller/OpcaoController";
+// import { OpcaoController } from '@/controller/OpcaoController'
+// import { OpcaoController } from 'controller/OpcaoController'
+import * as express from 'express'
+import { OpcaoController } from '../controller/OpcaoController'
 
 export class OpcaoRouter {
   constructor(app: express.Express) {

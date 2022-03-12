@@ -1,5 +1,7 @@
-import express from 'express'
-import { OpcaoItemController } from "../controller/OpcaoItemController";
+// import { OpcaoItemController } from '@/controller/OpcaoItemController'
+// import { OpcaoItemController } from 'controller/OpcaoItemController'
+import * as express from 'express'
+import { OpcaoItemController } from '../controller/OpcaoItemController'
 
 export class OpcaoItemRouter {
   constructor(app: express.Express) {

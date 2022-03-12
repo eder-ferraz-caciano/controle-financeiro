@@ -1,11 +1,9 @@
-import "reflect-metadata";
-import {createConnection} from "typeorm";
-import express from "express";
 import * as bodyParser from "body-parser";
-import {Request, Response} from "express";
-import {User} from "./entity/User";
-import cors from 'cors'
-import { RouterController } from "./router/index";
+import * as cors from 'cors';
+import * as express from "express";
+import "reflect-metadata";
+import { createConnection } from "typeorm";
+import { RouterController } from "./router";
 
 createConnection().then(async connection => {
 

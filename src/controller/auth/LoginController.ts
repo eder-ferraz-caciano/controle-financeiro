@@ -1,9 +1,10 @@
-import { async, validate } from "validate.js"
+// import { User } from '@/entity/User'
+// import { User } from 'entity/User'
 import { Request, Response } from 'express'
-import { Entity, getRepository, Repository } from "typeorm"
-import { User } from "../../entity/User"
 import * as jwt from 'jsonwebtoken'
-
+import { getRepository } from "typeorm"
+import { validate } from "validate.js"
+import { User } from '../../entity/User'
 
 
 export class LoginController {

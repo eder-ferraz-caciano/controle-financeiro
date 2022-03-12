@@ -15,8 +15,8 @@ export class HelperColumnsSoftModel {
   updatedBy: string | undefined
 
   @DeleteDateColumn()
-  deletedAt?: Date | null
+  deletedAt: Date | undefined
 
   @Column({ nullable: true })
-  deletedBy?: string | null
+  deletedBy: string | undefined
 }

@@ -1,6 +1,10 @@
+// import { Opcao } from '@/entity/Opcao'
+// import getUser from '@/hook/GetUserToken'
+// import { Opcao } from 'entity/Opcao'
 import { Request, Response } from 'express'
+// import getUser from 'hook/GetUserToken'
 import { getRepository } from 'typeorm'
-import { async, validate } from 'validate.js'
+import { validate } from 'validate.js'
 import { Opcao } from '../entity/Opcao'
 import getUser from '../hook/GetUserToken'
 

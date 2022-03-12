@@ -1,3 +1,5 @@
+// import { HelperColumnsSoftModel } from "@/helper/HelperColumnsSoftModel";
+// import { HelperColumnsSoftModel } from "helper/HelperColumnsSoftModel";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 
