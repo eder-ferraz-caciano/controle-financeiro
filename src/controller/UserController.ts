@@ -1,8 +1,4 @@
-// import { User } from '@/entity/User'
-// import getUser from '@/hook/GetUserToken'
-// import { User } from 'entity/User'
 import { Request, Response } from 'express'
-// import getUser from 'hook/GetUserToken'
 import { getRepository } from 'typeorm'
 import { async, isDate, validate } from 'validate.js'
 import { User } from '../entity/User'
@@ -13,9 +9,9 @@ export class UserController {
   private administrator = [0, 1]
 
   private validarUser = {
-    nome: { presence: true, type: 'string' },
+    nome: { presence: { allowEmpty: false, type: 'string'  }},
     email: { presence: true, email: true },
-    senha: { presence: true, type: 'string' },
+    senha: { presence: { allowEmpty: false, type: 'string'  }},
     admin: { presence: true, type: 'number', inclusion: this.administrator }
   }
 
@@ -31,7 +27,7 @@ export class UserController {
                   FROM user
                  WHERE deletedAt is null `
 
-      if(req.query.id && Number(req.query.id)) sql += `and id in (${req.query.id})`
+      if(req.query.id && parseFloat(String(req.query.id))) sql += `and id in (${req.query.id})`
       if(req.query.nome) sql += `and nome like '%${req.query.nome}%'`
       if(req.query.email) sql += `and email like '%${req.query.email}%'`
       if(req.query.senha) sql += `and senha = ${req.query.senha}`
@@ -40,7 +36,7 @@ export class UserController {
 
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -57,7 +53,7 @@ export class UserController {
 
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -89,7 +85,7 @@ export class UserController {
 
       // deve retornar o resultado
       return res.json('Usuário cadastrado com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -101,7 +97,7 @@ export class UserController {
       if(erro) return res.json(erro)
 
       // deve validar se o usuário existe
-      const usuario: any = await getRepository(User).findOne({
+      const usuario = await getRepository(User).findOne({
         id: parseInt(req.params.id),
         deletedAt: null
       })
@@ -125,7 +121,7 @@ export class UserController {
 
       // deve retornar o resultado
       return res.json('Usuário alterado com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -148,7 +144,7 @@ export class UserController {
 
       // deve retornar o resultado
       return res.json('Usuário excluído com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }

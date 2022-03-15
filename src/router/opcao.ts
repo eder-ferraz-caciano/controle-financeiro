@@ -1,5 +1,3 @@
-// import { OpcaoController } from '@/controller/OpcaoController'
-// import { OpcaoController } from 'controller/OpcaoController'
 import * as express from 'express'
 import { OpcaoController } from '../controller/OpcaoController'
 

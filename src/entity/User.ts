@@ -1,5 +1,3 @@
-// import { HelperColumnsSoftModel } from "@/helper/HelperColumnsSoftModel";
-// import { HelperColumnsSoftModel } from "helper/HelperColumnsSoftModel";
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 
@@ -7,17 +5,17 @@ import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 export class User extends HelperColumnsSoftModel {
 
     @PrimaryGeneratedColumn()
-    id: number | undefined
+    id: number
 
     @Column()
-    nome: string | undefined
+    nome: string
 
     @Column()
-    email: string | undefined
+    email: string
 
     @Column()
-    senha: string | undefined
+    senha: string
 
     @Column()
-    admin: number | undefined
+    admin: number
 }

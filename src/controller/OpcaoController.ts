@@ -1,8 +1,4 @@
-// import { Opcao } from '@/entity/Opcao'
-// import getUser from '@/hook/GetUserToken'
-// import { Opcao } from 'entity/Opcao'
 import { Request, Response } from 'express'
-// import getUser from 'hook/GetUserToken'
 import { getRepository } from 'typeorm'
 import { validate } from 'validate.js'
 import { Opcao } from '../entity/Opcao'
@@ -11,7 +7,7 @@ import getUser from '../hook/GetUserToken'
 export class OpcaoController {
 
   private validarOpcao = {
-    descricao: { presence: true, type: 'string' }
+    descricao: { presence: { allowEmpty: false, type: 'string'  }}
   }
 
   public dropdown = async(req: Request, res: Response) => {
@@ -19,9 +15,9 @@ export class OpcaoController {
       // deve retornar uma lista com as opções e itens das opções
       let sql = `
                 SELECT opcao.id
-                     , opcao_item.opcaoId
-                     , descricao
+                     , opcao.descricao
                      , opcao_item.codigo
+                     , opcao_item.opcaoId
                   FROM opcao
                   LEFT
                   JOIN opcao_item
@@ -33,7 +29,7 @@ export class OpcaoController {
 
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -47,15 +43,13 @@ export class OpcaoController {
                   FROM opcao
                  WHERE deletedAt is null `
 
-      if(req.query.id && Number(req.query.id)) sql += `and id in (${req.query.id})`
+      if(req.query.id && parseFloat(String(req.query.id))) sql += `and id in (${req.query.id})`
       if(req.query.descricao) sql += `and descricao like '%${req.query.descricao}%'`
       const lista = await getRepository(Opcao).query(sql)
 
-      const test: number[] = [1, 2]
-
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -72,7 +66,7 @@ export class OpcaoController {
 
       // deve retornar o resultado
       return res.json(lista)
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -101,7 +95,7 @@ export class OpcaoController {
 
       // deve retornar o resultado
       return res.json('Opção inserida com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -113,7 +107,7 @@ export class OpcaoController {
       if(erro) return res.json(erro)
 
       // deve validar se a opção existe
-      const opcao: any = await getRepository(Opcao).findOne({
+      const opcao = await getRepository(Opcao).findOne({
         id: parseInt(req.params.id),
         deletedAt: null
       })
@@ -137,7 +131,7 @@ export class OpcaoController {
 
       // deve retornar o resultado
       return res.json('Opção alterada com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }
@@ -160,7 +154,7 @@ export class OpcaoController {
 
       // deve retornar o resultado
       return res.json('Opção excluída com sucesso!')
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }

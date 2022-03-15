@@ -1,5 +1,3 @@
-// import { User } from '@/entity/User'
-// import { User } from 'entity/User'
 import { Request, Response } from 'express'
 import * as jwt from 'jsonwebtoken'
 import { getRepository } from "typeorm"
@@ -11,7 +9,7 @@ export class LoginController {
 
   private validarUsuario = {
     email: { presence: true, email: true },
-    senha: { presence: true, type: 'string' }
+    senha: { presence: { allowEmpty: false, type: 'string'  }}
   }
 
   public login = async(req: Request, res: Response) => {
@@ -34,7 +32,7 @@ export class LoginController {
           nome: usuario.nome,
           email: usuario.email,
         }
-      }, <any>process.env.APP_KEY, { expiresIn: '90h' })
+      }, process.env.APP_KEY, { expiresIn: '90h' })
 
       // deve retornar a key única junto dos dados inseridos
       return res.json({
@@ -45,7 +43,7 @@ export class LoginController {
           isAdmin: usuario.admin
         }
       })
-    } catch (error: any) {
+    } catch (error) {
       return res.json({ erro: error.message })
     }
   }

@@ -1,5 +1,3 @@
-// import { HelperColumnsSoftModel } from "@/helper/HelperColumnsSoftModel";
-// import { HelperColumnsSoftModel } from "helper/HelperColumnsSoftModel";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 
@@ -7,8 +5,8 @@ import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
 export class Opcao extends HelperColumnsSoftModel {
 
   @PrimaryGeneratedColumn()
-  id: number | undefined
+  id: number
 
   @Column()
-  descricao: string | undefined
+  descricao: string
 }
