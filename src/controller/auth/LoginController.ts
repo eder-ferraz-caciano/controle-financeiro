@@ -1,16 +1,15 @@
-import { async, validate } from "validate.js"
 import { Request, Response } from 'express'
-import { getRepository } from "typeorm"
-import { User } from "../../entity/User"
 import * as jwt from 'jsonwebtoken'
-
+import { getRepository } from "typeorm"
+import { validate } from "validate.js"
+import { User } from '../../entity/User'
 
 
 export class LoginController {
 
   private validarUsuario = {
     email: { presence: true, email: true },
-    senha: { presence: true, type: 'string' }
+    senha: { presence: { allowEmpty: false, type: 'string'  }}
   }
 
   public login = async(req: Request, res: Response) => {

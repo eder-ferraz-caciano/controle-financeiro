@@ -3,20 +3,20 @@ import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "ty
 export class HelperColumnsSoftModel {
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt: Date | undefined
 
   @Column({ nullable: true })
-  createdBy: string
+  createdBy: string | undefined
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt: Date | undefined
 
   @Column({ nullable: true })
-  updatedBy: string
+  updatedBy: string | undefined
 
   @DeleteDateColumn()
-  deletedAt: Date
+  deletedAt: Date | undefined
 
   @Column({ nullable: true })
-  deletedBy: string
+  deletedBy: string | undefined
 }

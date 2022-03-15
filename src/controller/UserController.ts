@@ -9,9 +9,9 @@ export class UserController {
   private administrator = [0, 1]
 
   private validarUser = {
-    nome: { presence: true, type: 'string' },
+    nome: { presence: { allowEmpty: false, type: 'string'  }},
     email: { presence: true, email: true },
-    senha: { presence: true, type: 'string' },
+    senha: { presence: { allowEmpty: false, type: 'string'  }},
     admin: { presence: true, type: 'number', inclusion: this.administrator }
   }
 
@@ -27,7 +27,7 @@ export class UserController {
                   FROM user
                  WHERE deletedAt is null `
 
-      if(req.query.id && parseFloat(req.query.id)) sql += `and id in (${req.query.id})`
+      if(req.query.id && parseFloat(String(req.query.id))) sql += `and id in (${req.query.id})`
       if(req.query.nome) sql += `and nome like '%${req.query.nome}%'`
       if(req.query.email) sql += `and email like '%${req.query.email}%'`
       if(req.query.senha) sql += `and senha = ${req.query.senha}`
@@ -98,7 +98,7 @@ export class UserController {
 
       // deve validar se o usuário existe
       const usuario = await getRepository(User).findOne({
-        id: req.params.id,
+        id: parseInt(req.params.id),
         deletedAt: null
       })
       if(!usuario) return res.json('Usuário não cadastrado!')
@@ -130,7 +130,7 @@ export class UserController {
     try {
       // deve verificar se o usuário já foi excluído
       const usuario = await getRepository(User).findOne({
-        id: req.params.id,
+        id: parseInt(req.params.id),
         deletedAt: null
       })
       if(!usuario) return res.json('Usuário não existe ou já foi excluído!')
