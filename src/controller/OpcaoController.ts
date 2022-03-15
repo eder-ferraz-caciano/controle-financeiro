@@ -59,10 +59,12 @@ export class OpcaoController {
       // deve validar se a opção existe
       const lista = await getRepository(Opcao).findOne({
         select: ['id', 'descricao'],
-        where: { id: req.params.id,
-                 deletedAt: null }
+        where: {
+          id: req.params.id,
+          deletedAt: null
+        }
       })
-      if(!lista) return res.json('Opção não existe!')
+      if (!lista) return res.json('Opção não existe!')
 
       // deve retornar o resultado
       return res.json(lista)

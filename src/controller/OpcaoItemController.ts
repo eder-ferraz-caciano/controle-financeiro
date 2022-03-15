@@ -146,21 +146,21 @@ export class OpcaoItemController {
         opcaoId: req.body.opcaoId,
         deletedAt: null
       })
-      if(unqOpcaoItem) return res.json('Deu erro boy')
+      if(unqOpcaoItem) return res.json('Item já existe')
 
       const unqOpcaoItem3 = await getRepository(OpcaoItem).findOne({
         descricao: req.body.descricao,
         opcaoId: req.body.opcaoId,
         deletedAt: null
       })
-      if(unqOpcaoItem3) return res.json('Deu erro boy')
+      if(unqOpcaoItem3) return res.json('Descrição do Item já existe')
 
       const unqOpcaoItem2 = await getRepository(OpcaoItem).findOne({
         codigo: req.body.codigo,
         opcaoId: req.body.opcaoId,
         deletedAt: null
       })
-      if(unqOpcaoItem2 && unqOpcaoItem3) {return res.json('Deu erro boy')}
+      if(unqOpcaoItem2 && unqOpcaoItem3) {return res.json('Código do Item já existe')}
 
       // deve adicionar a requisição a uma variável
       let auxOpcaoItem = { ...req.body }
