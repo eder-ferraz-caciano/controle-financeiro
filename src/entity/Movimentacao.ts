@@ -25,7 +25,7 @@ export class Movimentacao extends HelperColumnsSoftModel {
   @Column()
   tipo: number
 
-  @Column({ nullable: true })
+  @Column()
   relacionamentoId: number
 
   @Column()

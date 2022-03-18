@@ -4,6 +4,7 @@ import { getRepository } from 'typeorm'
 import { async, validate } from 'validate.js'
 import { Contas } from '../entity/Contas'
 import { Movimentacao } from '../entity/Movimentacao'
+import { Relacionamento } from '../entity/Relacionamento'
 import getUser from '../hook/GetUserToken'
 
 export class MovimentacaoController {
@@ -13,7 +14,7 @@ export class MovimentacaoController {
     receita: { presence: true, type: 'number' },
     despesa: { presence: true, type: 'number' },
     tipo: { presence: true, type: 'number', inclusion: [1, 2, 3] },
-    relacionamentoId: { presence: false, type: 'number' },
+    relacionamentoId: { presence: true, type: 'number' },
     contaOrigemId: { presence: true, type: 'number' },
     contaDestinoId: { presence: true, type: 'number'}
   }
@@ -30,6 +31,8 @@ export class MovimentacaoController {
                      , saldo
                      , movimentacao.tipo
                      , opcao_item.descricao as tipoDescricao
+                     , movimentacao.relacionamentoId
+                     , relacionamento.descricao as relacionamentoDescricao
                      , movimentacao.contaOrigemId
                      , contasOrigem.descricao as contaOrigemDescricao
                      , movimentacao.contaDestinoId
@@ -44,6 +47,9 @@ export class MovimentacaoController {
                  RIGHT
                   JOIN opcao_item
                     ON movimentacao.tipo = opcao_item.codigo
+                  LEFT
+                  JOIN relacionamento
+                    ON movimentacao.relacionamentoId = relacionamento.id
                  WHERE movimentacao.deletedAt is null
                    AND opcao_item.opcaoId = 1 `
 
@@ -54,6 +60,7 @@ export class MovimentacaoController {
       if(req.query.despesa) sql += `and despesa = ${req.query.despesa} `
       if(req.query.saldo) sql += `and saldo = ${req.query.saldo} `
       if(req.query.tipo && parseFloat(String(req.query.tipo))) sql += `and movimentacao.tipo in (${req.query.tipo})`
+      if(req.query.relacionamentoId && parseFloat(String(req.query.relacionamentoId))) sql += `and movimentacao.relacionamentoId in (${req.query.relacionamentoId})`
       if(req.query.contaOrigemId && parseFloat(String(req.query.contaOrigemId))) sql += `and movimentacao.contaOrigemId in (${req.query.contaOrigemId})`
       if(req.query.contaDestinoId && parseFloat(String(req.query.contaDestinoId))) sql += `and movimentacao.contaDestinoId in (${req.query.contaDestinoId})`
       if(sql) sql += `order by id`
@@ -78,6 +85,8 @@ export class MovimentacaoController {
                      , saldo
                      , movimentacao.tipo
                      , opcao_item.descricao as tipoDescricao
+                     , movimentacao.relacionamentoId
+                     , relacionamento.descricao as relacionamentoDescricao
                      , movimentacao.contaOrigemId
                      , contasOrigem.descricao as contaOrigemDescricao
                      , movimentacao.contaDestinoId
@@ -92,6 +101,9 @@ export class MovimentacaoController {
                  RIGHT
                   JOIN opcao_item
                     ON movimentacao.tipo = opcao_item.codigo
+                  LEFT
+                  JOIN relacionamento
+                    ON movimentacao.relacionamentoId = relacionamento.id
                  WHERE movimentacao.deletedAt is null
                    AND opcao_item.opcaoId = 1 `
 
@@ -124,6 +136,13 @@ export class MovimentacaoController {
       })
       if(!contaDestino) return res.json('Conta de destino não existe!')
 
+      // deve validar se os dados de pessoa existem
+      const relacionamento = await getRepository(Relacionamento).findOne({
+        id: req.body.relacionamentoId,
+        deletedAt: null
+      })
+      if(!relacionamento) return res.json('Dados de relacionamento não existem!')
+
       // deve incluir
       const addMov = await getRepository(Movimentacao).create({
         descricao: req.body.descricao,
@@ -132,7 +151,7 @@ export class MovimentacaoController {
         despesa: req.body.despesa,
         saldo: req.body.receita - req.body.despesa,
         tipo: req.body.tipo,
-        // relacionamentoId: req.body.relacionamentoId,
+        relacionamentoId: req.body.relacionamentoId,
         contaOrigemId: req.body.contaOrigemId,
         contaDestinoId: req.body.contaDestinoId,
         createdBy: await getUser(req)
@@ -173,6 +192,13 @@ export class MovimentacaoController {
         deletedAt: null
       })
       if(!contaDestino) return res.json('Conta de destino não existe!')
+
+      // deve validar se os dados de pessoa existem
+      const relacionamento = await getRepository(Relacionamento).findOne({
+        id: req.body.relacionamentoId,
+        deletedAt: null
+      })
+      if(!relacionamento) return res.json('Dados de relacionamento não existem!')
 
       // deve adicionar a requisição a uma variável
       let auxMov = { ...req.body }
