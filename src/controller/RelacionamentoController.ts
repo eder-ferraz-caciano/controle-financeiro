@@ -45,8 +45,7 @@ export class RelacionamentoController {
       const lista = await getRepository(Relacionamento).findOne({
         select: ['id', 'descricao', 'cpfCnpj', 'endereco', 'telefone'],
         where: {
-          id: req.params.id,
-          deletedAt: null
+          id: req.params.id
         }
       })
       if(!lista) return res.json('Não existe informações sobre essa pessoa!')
@@ -66,26 +65,22 @@ export class RelacionamentoController {
 
       // deve validar se os dados já foram inseridos
       const vDescricao = await getRepository(Relacionamento).findOne({
-        descricao: req.body.descricao,
-        deletedAt: null
+        descricao: req.body.descricao
       })
       if(vDescricao) return res.json('Descrição já foi cadastrada!')
 
       const vCpfCnpj = await getRepository(Relacionamento).findOne({
-        cpfCnpj: req.body.cpfCnpj,
-        deletedAt: null
+        cpfCnpj: req.body.cpfCnpj
       })
       if(vCpfCnpj) return res.json('CPF ou CNPJ já foram cadastrados!')
 
       const vEndereco = await getRepository(Relacionamento).findOne({
-        endereco: req.body.endereco,
-        deletedAt: null
+        endereco: req.body.endereco
       })
       if(vEndereco) return res.json('Endereço já foi cadastrado!')
 
       const vTelefone = await getRepository(Relacionamento).findOne({
-        telefone: req.body.telefone,
-        deletedAt: null
+        telefone: req.body.telefone
       })
       if(vTelefone) return res.json('Telefone já foi cadastrado!')
 
@@ -116,27 +111,22 @@ export class RelacionamentoController {
 
       // deve validar se a pessoa existe
       const unqPessoa = await getRepository(Relacionamento).findOne({
-        id: parseInt(req.params.id),
-        deletedAt: null
+        id: parseInt(req.params.id)
       })
       if(!unqPessoa) return res.json('Não existe informações sobre essa pessoa!')
 
       // deve validar se os dados já foram inseridos
       const vDescricao = await getRepository(Relacionamento).findOne({
-        descricao: req.body.descricao,
-        deletedAt: null
+        descricao: req.body.descricao
       })
       const vCpfCnpj = await getRepository(Relacionamento).findOne({
-        cpfCnpj: req.body.cpfCnpj,
-        deletedAt: null
+        cpfCnpj: req.body.cpfCnpj
       })
       const vEndereco = await getRepository(Relacionamento).findOne({
-        endereco: req.body.endereco,
-        deletedAt: null
+        endereco: req.body.endereco
       })
       const vTelefone = await getRepository(Relacionamento).findOne({
-        telefone: req.body.telefone,
-        deletedAt: null
+        telefone: req.body.telefone
       })
       if(vDescricao && vCpfCnpj && vEndereco && vTelefone) return res.json('Esses dados já foram cadastrados!')
 
@@ -160,8 +150,7 @@ export class RelacionamentoController {
     try {
       // deve validar se a pessoa existe
       const unqPessoa = await getRepository(Relacionamento).findOne({
-        id: parseInt(req.params.id),
-        deletedAt: null
+        id: parseInt(req.params.id)
       })
       if(!unqPessoa) return res.json('Dados não existem ou já foram excluídos!')
 
