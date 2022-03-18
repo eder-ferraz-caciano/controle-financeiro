@@ -2,6 +2,7 @@ import * as express from 'express'
 import { LoginController } from '../controller/auth/LoginController'
 import { HookAutenticacao } from '../hook/VerifyToken'
 import { ContasRouter } from './contas'
+import { MovimentacaoRouter } from './movimentacao'
 import { OpcaoRouter } from './opcao'
 import { OpcaoItemRouter } from './opcaoItem'
 import { UserRouter } from './user'
@@ -14,6 +15,7 @@ export class RouterController {
     new OpcaoRouter(app)
     new ContasRouter(app)
     new OpcaoItemRouter(app)
+    new MovimentacaoRouter(app)
 
     app.post('/login', login.login)
     app.get('*', autenticacao.checkAutenticate)

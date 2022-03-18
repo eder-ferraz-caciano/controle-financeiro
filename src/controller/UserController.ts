@@ -6,13 +6,11 @@ import getUser from '../hook/GetUserToken'
 
 export class UserController {
 
-  private administrator = [0, 1]
-
   private validarUser = {
     nome: { presence: { allowEmpty: false, type: 'string'  }},
     email: { presence: true, email: true },
     senha: { presence: { allowEmpty: false, type: 'string'  }},
-    admin: { presence: true, type: 'number', inclusion: this.administrator }
+    admin: { presence: true, type: 'number', inclusion: [0, 1] }
   }
 
   public listar = async(req: Request, res: Response) => {
@@ -30,7 +28,7 @@ export class UserController {
       if(req.query.id && parseFloat(String(req.query.id))) sql += `and id in (${req.query.id})`
       if(req.query.nome) sql += `and nome like '%${req.query.nome}%'`
       if(req.query.email) sql += `and email like '%${req.query.email}%'`
-      if(req.query.senha) sql += `and senha = ${req.query.senha}`
+      if(req.query.senha) sql += `and senha = '${req.query.senha}'`
       if(req.query.admin) sql += `and admin = ${req.query.admin}`
       const lista = await getRepository(User).query(sql)
 
