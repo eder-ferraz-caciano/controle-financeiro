@@ -5,6 +5,7 @@ import { ContasRouter } from './contas'
 import { MovimentacaoRouter } from './movimentacao'
 import { OpcaoRouter } from './opcao'
 import { OpcaoItemRouter } from './opcaoItem'
+import { RelacionamentoRouter } from './relacionamento'
 import { UserRouter } from './user'
 
 export class RouterController {
@@ -16,6 +17,7 @@ export class RouterController {
     new ContasRouter(app)
     new OpcaoItemRouter(app)
     new MovimentacaoRouter(app)
+    new RelacionamentoRouter(app)
 
     app.post('/login', login.login)
     app.get('*', autenticacao.checkAutenticate)
