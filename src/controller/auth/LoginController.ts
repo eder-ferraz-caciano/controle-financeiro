@@ -14,7 +14,7 @@ export class LoginController {
     try {
       // deve validar os dados da requisição
       const erro = await validate(req.body, this.validarUsuario)
-      if (erro) return res.json(erro)
+      if (erro) return res.status(400).json(erro)
 
       // deve validar se o usuário existe
       const usuario = await getRepository(User).findOne({
@@ -22,7 +22,7 @@ export class LoginController {
         senha: req.body.senha,
         deletedAt: null
       })
-      if (!usuario) return res.json("Usuário não existe!")
+      if (!usuario) return res.status(400).json("Usuário não existe!")
 
       // deve realizar o login com os dados inseridos e retornar uma key única
       const token = jwt.sign({
