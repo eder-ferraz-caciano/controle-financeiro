@@ -1,9 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { HelperColumnsSoftModel } from "../helper/HelperColumnsSoftModel"
 
 @Entity()
 export class Movimentacao extends HelperColumnsSoftModel {
-
   @PrimaryGeneratedColumn()
   id: number
 
@@ -13,13 +12,13 @@ export class Movimentacao extends HelperColumnsSoftModel {
   @Column()
   diaMovimento: Date
 
-  @Column("decimal", { precision: 16, scale: 2})
+  @Column("decimal", { precision: 16, scale: 2 })
   receita: number
 
-  @Column("decimal", { precision: 16, scale: 2})
+  @Column("decimal", { precision: 16, scale: 2 })
   despesa: number
 
-  @Column("decimal", { precision: 16, scale: 2})
+  @Column("decimal", { precision: 16, scale: 2 })
   saldo: number
 
   @Column()

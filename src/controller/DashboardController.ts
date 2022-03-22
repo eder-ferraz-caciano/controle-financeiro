@@ -1,15 +1,9 @@
-import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'
-import { async, validate } from 'validate.js'
-import { Movimentacao } from '../entity/Movimentacao'
+import { Request, Response } from "express"
+import { getRepository } from "typeorm"
+import { Movimentacao } from "../entity/Movimentacao"
 
 export class DashboardController {
-
-  // private validarData = {
-  //   diaMovimento: { presence: { allowEmpty: false, type: 'string' }},
-  // }
-
-  public listarSaldo = async(req: Request, res: Response) => {
+  public listarSaldo = async (req: Request, res: Response) => {
     try {
       // deve realizar a pesquisa com base nos dias e retornar o saldo dos dias especificados
       let sql = `
@@ -19,7 +13,7 @@ export class DashboardController {
                   FROM movimentacao
                  WHERE deletedAt is null `
 
-      if(req.query.dataInicio && req.query.dataFim) sql += `and date(diaMovimento) between '${req.query.dataInicio}' and '${req.query.dataFim}'`
+      if (req.query.dataInicio && req.query.dataFim) sql += `and date(diaMovimento) between '${req.query.dataInicio}' and '${req.query.dataFim}'`
       const saldo = await getRepository(Movimentacao).query(sql)
 
       // deve retornar o resultado
@@ -27,9 +21,9 @@ export class DashboardController {
     } catch (error) {
       return res.json({ erro: error.message })
     }
-  }
+  };
 
-  public listarContas = async(req: Request, res: Response) => {
+  public listarContas = async (req: Request, res: Response) => {
     try {
       // deve realizar a pesquisa com base nos dias e retornar o saldo de cada conta nos dias que foram passados
       let sql = `
@@ -44,8 +38,8 @@ export class DashboardController {
                     ON movimentacao.contaOrigemId = contas.id
                  WHERE movimentacao.deletedAt is null `
 
-      if(req.query.dataInicio && req.query.dataFim) sql += `and date(diaMovimento) between '${req.query.dataInicio}' and '${req.query.dataFim}'`
-      if(sql) sql += `order by contas.descricao`
+      if (req.query.dataInicio && req.query.dataFim) sql += `and date(diaMovimento) between '${req.query.dataInicio}' and '${req.query.dataFim}'`
+      if (sql) sql += "order by contas.descricao"
       const saldo = await getRepository(Movimentacao).query(sql)
 
       // deve retornar o resultado
@@ -53,5 +47,5 @@ export class DashboardController {
     } catch (error) {
       return res.json({ erro: error.message })
     }
-  }
+  };
 }
