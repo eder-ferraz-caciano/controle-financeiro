@@ -13,13 +13,13 @@ export class Movimentacao extends HelperColumnsSoftModel {
   @Column()
   diaMovimento: Date
 
-  @Column()
+  @Column("decimal", { precision: 16, scale: 2})
   receita: number
 
-  @Column()
+  @Column("decimal", { precision: 16, scale: 2})
   despesa: number
 
-  @Column()
+  @Column("decimal", { precision: 16, scale: 2})
   saldo: number
 
   @Column()
