@@ -61,7 +61,7 @@ export class UserController {
     try {
       // deve validar os dados da requisição
       const erro = await validate(req.body, this.validarUser)
-      if (erro) return res.json(erro)
+      if (erro) return res.status(400).json(erro)
 
       // deve validar se o usuário já foi incluído
       const usuario = await getRepository(User).findOne({
