@@ -1,22 +1,23 @@
-import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn
+} from "typeorm"
 
 export class HelperColumnsSoftModel {
-
   @CreateDateColumn()
-  createdAt: Date | undefined
+    createdAt: Date | undefined;
 
   @Column({ nullable: true })
-  createdBy: string | undefined
+    createdBy: string | undefined;
 
   @UpdateDateColumn()
-  updatedAt: Date | undefined
+    updatedAt: Date | undefined;
 
   @Column({ nullable: true })
-  updatedBy: string | undefined
+    updatedBy: string | undefined;
 
   @DeleteDateColumn()
-  deletedAt: Date | undefined
+    deletedAt: Date | undefined;
 
   @Column({ nullable: true })
-  deletedBy: string | undefined
+    deletedBy: string | undefined;
 }

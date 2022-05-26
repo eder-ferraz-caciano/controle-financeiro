@@ -1,23 +1,17 @@
-import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'
-import { async, isDate, validate } from 'validate.js'
-import { Contas } from '../entity/Contas'
-import getUser from '../hook/GetUserToken'
-
-enum TipoConta {
-  Analitico = 1,
-  Sintetico = 2
-}
+import { Request, Response } from "express"
+import { getRepository } from "typeorm"
+import { validate } from "validate.js"
+import { Contas, TipoConta } from "../entity/Contas"
+import getUser from "../hook/GetUserToken"
 
 export class ContasController {
-
   private validarContas = {
-    descricao: { presence: { allowEmpty: false, type: 'string' }},
-    observacao: { presence: false, type: 'string' },
-    contaPaiId: { presence: false, type: 'number' }
+    descricao: { presence: { allowEmpty: false, type: "string" } },
+    observacao: { presence: false, type: "string" },
+    contaPaiId: { presence: false, type: "number" }
   }
 
-  public tree = async(req: Request, res: Response) => {
+  public tree = async (_req: Request, res: Response) => {
     try {
       // deve pesquisar pelos campos e adicioná-los a uma variável
       const contas: any = await getRepository(Contas).find({ select: ["id", "descricao", "observacao", "tipo", "contaPaiId"] })
@@ -27,7 +21,7 @@ export class ContasController {
       const contasFilho: any = contas.filter(el => !!el.contaPaiId)
 
       // deve usar o forEach para fazer um looping que pegue childrens o qual o campo contaPaiId esteja referenciando um id existente
-      contasFilho.forEach(element => {
+      contasFilho.forEach(() => {
         contasFilho.forEach(el1 => {
           el1.children = contas.filter(el => el.contaPaiId === el1.id)
         })
@@ -45,7 +39,7 @@ export class ContasController {
     }
   }
 
-  public listar = async(req: Request, res: Response) => {
+  public listar = async (req: Request, res: Response) => {
     try {
       // deve pequisar pelas contas e filtrar elas
       let sql = `
@@ -57,11 +51,11 @@ export class ContasController {
                   FROM contas
                  WHERE deletedAt is null `
 
-      if(req.query.id && parseFloat(String(req.query.id))) sql += `and id in (${req.query.id})`
-      if(req.query.descricao) sql += `and descricao like '%${req.query.descricao}%'`
-      if(req.query.observacao) sql += `and observacao like '%${req.query.observacao}%'`
-      if(req.query.tipo) sql += `and tipo = ${req.query.tipo}`
-      if(req.query.contaPaiId && parseFloat(String(req.query.contaPaiId))) sql += `and contaPaiId in (${req.query.contaPaiId})`
+      if (req.query.id && parseFloat(String(req.query.id))) sql += `and id in (${req.query.id})`
+      if (req.query.descricao) sql += `and descricao like '%${req.query.descricao}%'`
+      if (req.query.observacao) sql += `and observacao like '%${req.query.observacao}%'`
+      if (req.query.tipo) sql += `and tipo = ${req.query.tipo}`
+      if (req.query.contaPaiId && parseFloat(String(req.query.contaPaiId))) sql += `and contaPaiId in (${req.query.contaPaiId})`
       const lista = await getRepository(Contas).query(sql)
 
       // deve retornar o resultado
@@ -71,17 +65,17 @@ export class ContasController {
     }
   }
 
-  public exibir = async(req: Request, res: Response) => {
+  public exibir = async (req: Request, res: Response) => {
     try {
       // deve pesquisar pelo ID da conta
       const lista = await getRepository(Contas).findOne({
-        select: ['id', 'descricao', 'observacao', 'tipo', 'contaPaiId'],
+        select: ["id", "descricao", "observacao", "tipo", "contaPaiId"],
         where: {
           id: parseInt(req.params.id),
           deletedAt: null
         }
       })
-      if(!lista) return res.json('Conta não existe!')
+      if (!lista) return res.json("Conta não existe!")
 
       // deve retornar o resultado
       return res.json(lista)
@@ -90,11 +84,11 @@ export class ContasController {
     }
   }
 
-  public incluir = async(req: Request, res: Response) => {
+  public incluir = async (req: Request, res: Response) => {
     try {
       // deve validar os dados da requisição
       const erro = await validate(req.body, this.validarContas)
-      if(erro) return res.json(erro)
+      if (erro) return res.json(erro)
 
       // deve validar se a conta já foi inserida
       const conta = await getRepository(Contas).findOne({
@@ -102,13 +96,13 @@ export class ContasController {
         contaPaiId: req.body.contaPaiId,
         deletedAt: null
       })
-      if(conta) return res.json('Conta já cadastrada')
+      if (conta) return res.json("Conta já cadastrada")
 
       const descConta = await getRepository(Contas).findOne({
         descricao: req.body.descricao,
         deletedAt: null
       })
-      if(descConta) return res.json('Descrição da Conta já cadastrada!')
+      if (descConta) return res.json("Descrição da Conta já cadastrada!")
 
       // deve incluir
       const addConta = await getRepository(Contas).create({
@@ -124,16 +118,14 @@ export class ContasController {
         id: addConta.contaPaiId,
         deletedAt: null
       })
-      if(!!ajdConta) {
+      if (ajdConta) {
         ajdConta.tipo = TipoConta.Sintetico
         ajdConta.updatedBy = await getUser(req)
         await getRepository(Contas).update(ajdConta.id, ajdConta)
       }
 
       // deve ter uma validação para chamar a função acima
-      if(!!addConta.contaPaiId) {
-        ajdConta
-      } else {
+      if (!addConta.contaPaiId) {
         addConta.tipo = TipoConta.Sintetico
       }
 
@@ -141,24 +133,24 @@ export class ContasController {
       await getRepository(Contas).save(addConta)
 
       // deve retornar o resultado
-      return res.json('Conta cadastrada com sucesso!')
+      return res.json("Conta cadastrada com sucesso!")
     } catch (error) {
       return res.json({ erro: error.message })
     }
   }
 
-  public alterar = async(req: Request, res: Response) => {
+  public alterar = async (req: Request, res: Response) => {
     try {
       // deve validar os dados da requisição
       const erro = await validate(req.body, this.validarContas)
-      if(erro) return res.json(erro)
+      if (erro) return res.json(erro)
 
       // deve validar se a conta existe
       const conta = await getRepository(Contas).findOne({
         id: parseInt(req.params.id),
         deletedAt: null
       })
-      if(!conta) return res.json('Conta não existe!')
+      if (!conta) return res.json("Conta não existe!")
 
       // deve validar se os dados já existem
       const unqConta = await getRepository(Contas).findOne({
@@ -166,16 +158,16 @@ export class ContasController {
         contaPaiId: req.body.contaPaiId,
         deletedAt: null
       })
-      if(unqConta) return res.json('Conta já foi cadastrada!')
+      if (unqConta) return res.json("Conta já foi cadastrada!")
 
       const unqConta2 = await getRepository(Contas).findOne({
         descricao: req.body.descricao,
         deletedAt: null
       })
-      if(unqConta2) return res.json('Descrição da Conta já cadastrada!')
+      if (unqConta2) return res.json("Descrição da Conta já cadastrada!")
 
       // deve colocar a requisição em uma variável
-      let auxConta = { ...req.body }
+      const auxConta = { ...req.body }
 
       // deve adicionar dados a variável
       auxConta.updatedBy = await getUser(req)
@@ -184,20 +176,20 @@ export class ContasController {
       await getRepository(Contas).update(conta.id, auxConta)
 
       // deve retonar o resultado
-      return res.json('Conta alterada com sucesso!')
+      return res.json("Conta alterada com sucesso!")
     } catch (error) {
       return res.json({ erro: error.message })
     }
   }
 
-  public excluir = async(req: Request, res: Response) => {
+  public excluir = async (req: Request, res: Response) => {
     try {
       // deve validar se a conta existe ou se já foi excluída
       const conta = await getRepository(Contas).findOne({
         id: parseInt(req.params.id),
         deletedAt: null
       })
-      if(!conta) return res.json('Conta não existe ou já foi excluída!')
+      if (!conta) return res.json("Conta não existe ou já foi excluída!")
 
       // deve excluir
       const delConta = await getRepository(Contas).softRemove(conta)
@@ -207,7 +199,7 @@ export class ContasController {
       await getRepository(Contas).save(delConta)
 
       // deve procurar por um id que seja o mesmo que o PaiId de conta
-      let contaPai = await getRepository(Contas).findOne({
+      const contaPai = await getRepository(Contas).findOne({
         id: conta.contaPaiId
       })
 
@@ -217,15 +209,13 @@ export class ContasController {
       })
 
       // deve validar se o pai tem mais filhos, se sim, continua sendo pai, caso contrario se ele tiver um pai passa a ser filho, se não, continua sendo pai
-      if(!contaPai.contaPaiId && !FihosDoPai.length) {
-        contaPai
-      } else {
+      if (contaPai.contaPaiId && FihosDoPai.length) {
         contaPai.tipo = TipoConta.Analitico
         await getRepository(Contas).update(contaPai.id, contaPai)
       }
 
       // deve retornar o resultado
-      return res.json('Conta excluída com sucesso!')
+      return res.json("Conta excluída com sucesso!")
     } catch (error) {
       return res.json({ erro: error.message })
     }
